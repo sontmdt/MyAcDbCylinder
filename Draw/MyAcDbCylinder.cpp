@@ -506,9 +506,34 @@ void MyAcDbCylinder::createRealisticBlock(AcDbBlockTableRecord* pBTR) const
     }
 }
 
+void MyAcDbCylinder::dragStatus(
+    const AcDb::DragStat status)
+{
+    //acutPrintf(L"\n[dragStatus] start");
+    switch (status)
+    {
+    case AcDb::kDragStart:
+		m_dragging = true;
+        //acutPrintf(L"\n[dragStatus] kDragStart: %d", m_dragging);
+        break;
+
+    case AcDb::kDragEnd:
+		m_dragging = false;
+        //acutPrintf(L"\n[dragStatus] kDragEnd: %d", m_dragging);
+        break;
+
+    case AcDb::kDragAbort:
+		m_dragging = false;
+        //acutPrintf(L"\n[dragStatus] kDragAbort");
+        break;
+    }
+    //acutPrintf(L"\n[dragStatus] end: %d", m_dragging);
+}
+
 Adesk::Boolean MyAcDbCylinder::subWorldDraw(AcGiWorldDraw* pWd)
 {
-    if (pWd->isDragging())
+    acutPrintf(L"\n[subWorldDraw]: %d", m_dragging);
+    if (m_dragging == true)
     {
         AcGePoint3dArray bottomRing, topRing;
         buildWireframe(bottomRing, topRing, 32);
@@ -524,7 +549,7 @@ Adesk::Boolean MyAcDbCylinder::subWorldDraw(AcGiWorldDraw* pWd)
             pWd->geometry().polyline(2, pts);
         }
     }
-    else acutPrintf(L"\n[subWorldDraw] isDragging = FALSE this=%p", this);
+    //else acutPrintf(L"\n[subWorldDraw] isDragging = FALSE this=%p", this);
     return Adesk::kFalse;
 }
 
@@ -640,6 +665,7 @@ Acad::ErrorStatus MyAcDbCylinder::subMoveGripPointsAt(
     const AcGeVector3d& offset)
 {
     assertWriteEnabled();
+    //acutPrintf(L"\n[subMoveGripPointsAt]");
     AcGeVector3d axisX = getAxisX();
     AcGeVector3d axisXDir = axisX.normal();
 

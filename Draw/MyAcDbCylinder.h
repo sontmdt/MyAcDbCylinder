@@ -53,10 +53,10 @@ public:
     virtual Acad::ErrorStatus subMoveGripPointsAt(
         const AcDbIntArray& indices,
         const AcGeVector3d& offset) override;
-    //void dragStatus(
-    //    const AcDb::DragStat status
-    //) override;
-    // Transform
+    void dragStatus(
+        const AcDb::DragStat status
+    ) override;
+
     virtual Acad::ErrorStatus subTransformBy(const AcGeMatrix3d& xform) override;
 
     // Bounding box
@@ -77,7 +77,7 @@ private:
 
     bool m_wireDirty;
     bool m_realisticDirty;
-
+	bool m_dragging = false;
     // Geometry helpers
     AcGeVector3d getAxisX() const;
 
